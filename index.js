@@ -68,6 +68,19 @@ async function run() {
             res.send(result);
         })
 
+        // products api's 
+        app.post('/products', async (req, res) => {
+            const result = await productsCollection.insertOne(req.body);
+            res.send(result);
+        })
+
+        app.get('/products', async (req, res) => {
+            const query = {};
+            const result = await productsCollection.find(query).toArray();
+
+            res.send(result);
+        })
+
     }
     finally { }
 }
