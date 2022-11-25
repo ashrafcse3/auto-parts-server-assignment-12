@@ -90,6 +90,28 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/allusers', async (req, res) => {
+            const query = { role: 'User' };
+            const allusers = await usersCollection.find(query).toArray();
+
+            res.send(allusers);
+        })
+
+        app.get('/allsellers', async (req, res) => {
+            const query = { role: 'seller' };
+            const allsellers = await usersCollection.find(query).toArray();
+
+            res.send(allsellers);
+        })
+
+        app.delete('/users/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await usersCollection.deleteOne(query);
+
+            res.send(result);
+        })
+
         // check database for same users for social login
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
