@@ -22,6 +22,7 @@ async function run() {
     try {
         const productsCollection = client.db('resaleProducts').collection('products');
         const categoriesCollection = client.db('resaleProducts').collection('categories');
+        const usersCollection = client.db('resaleProducts').collection('users');
 
         // categories api's 
         app.post('/categories', async (req, res) => {
@@ -79,6 +80,26 @@ async function run() {
             const result = await productsCollection.find(query).toArray();
 
             res.send(result);
+        })
+
+        //users api's
+        app.post('/users', async (req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+
+            res.send(result);
+        })
+
+        // check database for same users for social login
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email };
+            const result = await usersCollection.findOne(query);
+
+            if (result === null) {
+                res.send(false)
+            }
+            else res.send(true);
         })
 
     }
