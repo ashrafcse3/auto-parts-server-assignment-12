@@ -82,6 +82,24 @@ async function run() {
             res.send(result);
         })
 
+        // update product advertise option
+        app.patch('/advertiseProduct/:id', async (req, res) => {
+            const id = req.params.id;
+            const data = req.body;
+
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateProduct = {
+                $set: {
+                    advertise_status: data.advertise_status
+                }
+            };
+
+            const result = await productsCollection.updateOne(filter, updateProduct, options);
+
+            res.send(result);
+        })
+
         //users api's
         app.post('/users', async (req, res) => {
             const user = req.body;
