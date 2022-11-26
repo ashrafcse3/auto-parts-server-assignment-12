@@ -82,6 +82,33 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/productbycategory/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { category_id: id };
+            const products = await productsCollection.find(query).toArray();
+
+            res.send(products);
+        })
+
+        app.get('/advertisedproducts', async (req, res) => {
+            const query = { advertise_status: "Advertised" };
+            const products = await productsCollection.find(query).toArray();
+
+            res.send(products);
+        })
+
+        app.get('/randomproducts', async (req, res) => {
+            const sampleAggregation = {
+                $sample: {
+                    size: 3
+                }
+            }
+
+            const randomproducts = await productsCollection.aggregate([sampleAggregation]).toArray();
+
+            res.send(randomproducts);
+        })
+
         // update product advertise option
         app.patch('/advertiseProduct/:id', async (req, res) => {
             const id = req.params.id;
