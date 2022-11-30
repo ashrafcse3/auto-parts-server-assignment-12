@@ -23,6 +23,7 @@ async function run() {
         const productsCollection = client.db('resaleProducts').collection('products');
         const categoriesCollection = client.db('resaleProducts').collection('categories');
         const usersCollection = client.db('resaleProducts').collection('users');
+        const blogsCollection = client.db('resaleProducts').collection('blogs');
 
         // categories api's 
         app.post('/categories', async (req, res) => {
@@ -149,6 +150,13 @@ async function run() {
             res.send(allsellers);
         })
 
+        app.get('/users/seller/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email };
+            const user = await usersCollection.findOne(query);
+            res.send({ isSeller: user?.role === 'seller' });
+        })
+
         app.delete('/users/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
@@ -167,6 +175,21 @@ async function run() {
                 res.send(false)
             }
             else res.send(true);
+        })
+
+        //blog api's
+        app.post('/blogs', async (req, res) => {
+            const blog = req.body;
+            const result = await blogsCollection.insertOne(blog);
+
+            res.send(result);
+        })
+
+        app.get('/blogs', async (req, res) => {
+            const query = {};
+            const blogs = await blogsCollection.find(query).toArray();
+
+            res.send(blogs);
         })
 
     }
