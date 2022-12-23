@@ -24,6 +24,7 @@ async function run() {
         const categoriesCollection = client.db('resaleProducts').collection('categories');
         const usersCollection = client.db('resaleProducts').collection('users');
         const blogsCollection = client.db('resaleProducts').collection('blogs');
+        const bookingsCollection = client.db('resaleProducts').collection('bookings');
 
         // categories api's 
         app.post('/categories', async (req, res) => {
@@ -108,6 +109,15 @@ async function run() {
             const randomproducts = await productsCollection.aggregate([sampleAggregation]).toArray();
 
             res.send(randomproducts);
+        })
+
+        // product's booking
+        app.post('/booking', async (req, res) => {
+            const booking = req.body;
+
+            const result = await bookingsCollection.insertOne(booking);
+
+            res.send(result);
         })
 
         // update product advertise option
